@@ -1,0 +1,41 @@
+{
+  "name": "common-calendar-tweets",
+  "version": "1.0.0",
+  "description": "tweets for Common Calendar",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx functions-framework --target=tweetDay --signature-type=http",
+    "deploy": "gcloud functions deploy calendar-tweet-day --entry-point tweetDay --runtime nodejs14 --trigger-http"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jgresham/common-calendar-tweets.git"
+  },
+  "keywords": [
+    "common",
+    "calendar",
+    "common",
+    "calendar"
+  ],
+  "author": "jgresham",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jgresham/common-calendar-tweets/issues"
+  },
+  "type": "module",
+  "compilerOptions": {
+    "resolveJsonModule": true,
+    "esModuleInterop": true
+  },
+  "homepage": "https://github.com/jgresham/common-calendar-tweets#readme",
+  "devDependencies": {
+    "@google-cloud/functions-framework": "^2.1.0",
+    "prettier": "2.5.1"
+  },
+  "dependencies": {
+    "dotenv": "^14.2.0",
+    "ethers": "^5.5.3",
+    "twitter-api-v2": "^1.9.1"
+  }
+}
