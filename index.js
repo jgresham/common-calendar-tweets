@@ -46,7 +46,7 @@ export const tweetDay = async (req, res) => {
   const LegacyStewardAddress = "0xc508E4651884c79f05Daca3Bc7182a76DBB8E3c8"
   const alchemyProvider = new ethers.providers.AlchemyProvider(
     "homestead",
-    ALCHEMY_API_KEY
+    process.env.ALCHEMY_API_KEY
   )
   const contract = new ethers.Contract(
     CommonCalenderAddress,
@@ -122,7 +122,6 @@ export const tweetDay = async (req, res) => {
   console.log("Tweet text:" + text)
 
   // Read+Write level
-  console.log("twitterClient: ", twitterClient)
   const rwClient = twitterClient.readWrite
   try {
     await rwClient.v2.tweet(text)
