@@ -10,3 +10,15 @@ TWITTER_APP_SECRET=<secret>
 TWITTER_ACCESS_TOKEN=<access-token>
 TWITTER_ACCESS_SECRET<access-secret>
 ```
+
+Run locally
+```
+npm start
+```
+
+Navigate to `http://localhost:8080` to trigger the function. Check for the http response to be "Tweeted successfully"
+
+Deploy to Google Cloud
+```
+npm run deploy
+```
