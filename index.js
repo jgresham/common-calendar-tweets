@@ -16,6 +16,10 @@ const legacyContractStewardABI = JSON.parse(
   await readFile(new URL("./legacyStewardABI.json", import.meta.url))
 )
 
+// open sea v2 collection
+// https://opensea.io/collection/commoncalendar-v2
+// logo url https://calendar.org/logo512.png
+
 const getTodaysTokenId = () => {
   // Formula in contract
   // tokenId = uint256(month).mul(100).add(dayOfMonth);
@@ -89,16 +93,19 @@ export const tweetDay = async (req, res) => {
   let todayOwner
   let todayPrice
   let todayTotalCollected
+  let todaysTokenAddress
   if (isLegacyDay) {
     todayOwner = await legacyContract.ownerOf(todayTokenId)
     todayPrice = await legacyContractSteward.price(todayTokenId)
     todayTotalCollected = await legacyContractSteward.totalCollected(
       todayTokenId
     )
+    todaysTokenAddress = LegacyCommonCalenderAddress
   } else {
     todayOwner = await contract.ownerOf(todayTokenId)
     todayPrice = await contractSteward.price(todayTokenId)
     todayTotalCollected = await contractSteward.totalCollected(todayTokenId)
+    todaysTokenAddress = CommonCalenderAddress
   }
   console.log(
     "Total collected for today: ",
@@ -117,14 +124,23 @@ export const tweetDay = async (req, res) => {
     console.error("Error getting ensName for address: ", todayOwner)
   }
 
+    // supports ens or 0x-addresss
+  const etherscanOwnerURL = `https://etherscan.io/address/${ownerText}`
+  const etherscanTokenIdLink = `https://etherscan.io/token/${todaysTokenAddress}?a=${todayTokenId}`
+  const blockscoutOwnerURL = `https://blockscout.com/eth/mainnet/address/${todayOwner}/transactions`
+  const blockscoutTokenIdLink = `https://blockscout.com/eth/mainnet/token/${todaysTokenAddress}/instance/${todayTokenId}/token-transfers`
+
   // const text = "Today is \"" + todaysName + "\"!\n\ncalendar.org"
   const text = `Today is \"${todaysName}\"!\n\nNamed by owner ${ownerText}. Valued at Ξ${todayPrice}\n\nSubject to a 1% per year Harberger Tax to the Common Calendar project. More at calendar.org`
   console.log("Tweet text:" + text)
 
+  const urlsTweetText = `Today's Owner\nEtherscan: ${etherscanOwnerURL}\nBlockscout: ${blockscoutOwnerURL}\n\nToday's NFT\nEtherescan: ${etherscanTokenIdLink}\nBlockscout: ${blockscoutTokenIdLink}`
+  console.log("Tweet urls:" + urlsTweetText)
+
   // Read+Write level
   const rwClient = twitterClient.readWrite
   try {
-    await rwClient.v2.tweet(text)
+    await rwClient.v2.tweetThread([text, urlsTweetText])
   } catch (e) {
     console.error("failled to create tweet")
     console.error(e)
